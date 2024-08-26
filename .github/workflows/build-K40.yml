@@ -1,0 +1,66 @@
+name: MIUI-Kernel
+
+on: 
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Checkout Kernel Source Code
+      uses: actions/checkout@v4
+      with:
+        github-server-url: 'https://github.com'
+        repository: ch122707/K40
+        ref: time
+        path: android-kernel      
+    
+    - name: Setup Build Environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install git-core git-lfs gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 libncurses5 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig python-is-python3 python2 cpio p7zip-full
+    
+    - name: Download Clang Toolchain
+      run: |
+        mkdir Clang
+        cd Clang
+        wget -q https://github.com/XSans0/WeebX-Clang/releases/download/WeebX-Clang-18.1.8-release/WeebX-Clang-18.1.8.tar.gz -O Clang.tar.gz
+        tar -zvxf Clang.tar.gz
+        CLANG_DIR=`pwd`
+        echo "CLANG_DIR=$CLANG_DIR" >> $GITHUB_ENV
+          
+    - name: Generate Kernel Configuration
+      run: |
+        cd android-kernel      
+        PATH=${{ env.CLANG_DIR }}/bin:$PATH
+        DEVICE_NAME=alioth
+        KERNEL_DEFCONFIG=alioth_defconfig
+        KERNEL_DIR=`pwd`
+        echo "KERNEL_DIR=${KERNEL_DIR}" >> $GITHUB_ENV
+        echo "ZIMAGE_DIR="${KERNEL_DIR}/out/arch/arm64/boot"" >> $GITHUB_ENV
+        ARCH=arm64
+        SUBARCH=arm64
+        cd $KERNEL_DIR
+        make $KERNEL_DEFCONFIG O=out CC=clang ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- NM=llvm-nm OBJDUMP=llvm-objdump STRIP=llvm-strip
+
+    - name: Build Kernel
+      run: |
+        cd android-kernel
+        PATH=${{ env.CLANG_DIR }}/bin:$PATH
+        clang -v
+        SUBARCH=arm64
+        make -j$(nproc --all) O=out CC=clang ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- NM=llvm-nm OBJDUMP=llvm-objdump STRIP=llvm-strip
+  
+    - name: ZIP Kernel
+      run: |
+        cd android-kernel
+        cp -fp ${{ env.ZIMAGE_DIR }}/Image.gz anykernel
+        TIME=$(TZ=Asia/Shanghai date "+%H%M")
+        echo "ZIMAGE_NAME=MIUIOS-"$TIME >> $GITHUB_ENV
+        rm -rf out
+        
+    - name: Upload Kernel Image ZIP
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.ZIMAGE_NAME }}
+        path: android-kernel/anykernel/*
