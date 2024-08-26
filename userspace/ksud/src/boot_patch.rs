@@ -82,7 +82,10 @@ pub fn patch(
         );
     }
 
-    let workding_dir = tempdir::TempDir::new("KernelSU")?;
+    let workding_dir = tempfile::Builder::new()
+        .prefix("KernelSU")
+        .tempdir()
+        .context("create temp dir failed")?;
 
     let bootimage;
 
