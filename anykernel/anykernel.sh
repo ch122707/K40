@@ -1,52 +1,44 @@
 # AnyKernel3 Ramdisk Mod Script
-# osm0sis @ xda-developers
 
-## AnyKernel setup
-# begin properties
 properties() { '
-kernel.string=REAL-KING KERNEL by ROHAIL(@Rohail33)--Telegram
+kernel.string=Redmi K40 by HK122707
 do.devicecheck=1
 do.modules=0
 do.systemless=1
 do.cleanup=1
 do.cleanuponabort=0
-device.name1=
-device.name2=
+device.name1=alioth
+device.name2=aliothin
 device.name3=
 device.name4=
 device.name5=
 supported.versions=
-'; } # end properties
+supported.patchlevels=
+'; }
 
 # shell variables
-block=/dev/block/bootdevice/by-name/boot;
+block=boot;
 is_slot_device=1;
 ramdisk_compression=auto;
 
-
-## AnyKernel methods (DO NOT CHANGE)
-# import patching functions/variables - see for reference
+# import patching
 . tools/ak3-core.sh;
 
-
-## AnyKernel file attributes
-# set permissions/ownership for included ramdisk files
+# set permissions/ownership
 set_perm_recursive 0 0 750 750 $ramdisk/*;
 
-
-## AnyKernel install
+# AnyKernel boot install
 dump_boot;
 
-# Begin Ramdisk Changes
-
-# migrate from /overlay to /overlay.d to enable SAR Magisk
+# migrate from
 if [ -d $ramdisk/overlay ]; then
   rm -rf $ramdisk/overlay;
 fi;
 
+# end boot install
 write_boot;
-## end install
-## vendor_boot shell variables
+
+# vendor_boot shell variables
 block=/dev/block/bootdevice/by-name/vendor_boot;
 is_slot_device=auto;
 ramdisk_compression=auto;
@@ -58,5 +50,5 @@ reset_ak;
 # vendor_boot install
 dump_boot;
 
-write_boot;
-## end vendor_boot install
+# end vendor_boot install
+write_boot
