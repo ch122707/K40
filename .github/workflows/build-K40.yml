@@ -24,7 +24,7 @@ jobs:
       run: |
         mkdir Clang
         cd Clang
-        wget -q https://github.com/XSans0/WeebX-Clang/releases/download/WeebX-Clang-18.1.8-release/WeebX-Clang-18.1.8.tar.gz -O Clang.tar.gz
+        wget -q https://github.com/XSans0/WeebX-Clang/releases/download/WeebX-Clang-19.1.0-release/WeebX-Clang-19.1.0.tar.gz -O Clang.tar.gz
         tar -zvxf Clang.tar.gz
         CLANG_DIR=`pwd`
         echo "CLANG_DIR=$CLANG_DIR" >> $GITHUB_ENV
