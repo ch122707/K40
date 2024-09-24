@@ -1587,9 +1587,6 @@ fail:
 netdev_cleanup:
 	gether_cleanup(netdev_priv(ncm_opts->net));
 
-error:
-	ERROR(cdev, "%s: can't bind, err %d\n", f->name, status);
-
 	return status;
 }
 
