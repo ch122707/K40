@@ -6,15 +6,11 @@
 #include "linux/types.h"
 #include "linux/uaccess.h"
 #include "linux/version.h"
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
 #include "linux/sched/task_stack.h"
-#else
-#include "linux/sched.h"
-#endif
 
 #include "allowlist.h"
 #include "arch.h"
-#include "klog.h" // IWYU pragma: keep
+#include "klog.h"
 #include "ksud.h"
 #include "kernel_compat.h"
 
@@ -75,26 +71,13 @@ int ksu_handle_stat(int *dfd, const char __user **filename_user, int *flags)
 
 	char path[sizeof(su) + 1];
 	memset(path, 0, sizeof(path));
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 18, 0)
-	// it becomes a `struct filename *` after 5.18
-	// https://elixir.bootlin.com/linux/v5.18/source/fs/stat.c#L216
-	const char sh[] = SH_PATH;
-	struct filename *filename = * ((struct filename **) filename_user);
-	if (IS_ERR(filename)) {
-		return 0;
-	}
-	if (likely(memcmp(filename->name, su, sizeof(su))))
-		return 0;
-	pr_info("vfs_statx su->sh!\n");
-	memcpy((void *)filename->name, sh, sizeof(sh));
-#else
+
 	ksu_strncpy_from_user_nofault(path, *filename_user, sizeof(path));
 
 	if (unlikely(!memcmp(path, su, sizeof(su)))) {
 		pr_info("newfstatat su->sh!\n");
 		*filename_user = sh_user_path();
 	}
-#endif
 
 	return 0;
 }
@@ -146,18 +129,11 @@ static int newfstatat_handler_pre(struct kprobe *p, struct pt_regs *regs)
 {
 	int *dfd = (int *)&PT_REGS_PARM1(regs);
 	const char __user **filename_user = (const char **)&PT_REGS_PARM2(regs);
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
-// static int vfs_statx(int dfd, const char __user *filename, int flags, struct kstat *stat, u32 request_mask)
 	int *flags = (int *)&PT_REGS_PARM3(regs);
-#else
-// int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,int flag)
-	int *flags = (int *)&PT_REGS_CCALL_PARM4(regs);
-#endif
 
 	return ksu_handle_stat(dfd, filename_user, flags);
 }
 
-// https://elixir.bootlin.com/linux/v5.10.158/source/fs/exec.c#L1864
 static int execve_handler_pre(struct kprobe *p, struct pt_regs *regs)
 {
 	int *fd = (int *)&PT_REGS_PARM1(regs);
@@ -168,20 +144,12 @@ static int execve_handler_pre(struct kprobe *p, struct pt_regs *regs)
 }
 
 static struct kprobe faccessat_kp = {
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 17, 0)
 	.symbol_name = "do_faccessat",
-#else
-	.symbol_name = "sys_faccessat",
-#endif
 	.pre_handler = faccessat_handler_pre,
 };
 
 static struct kprobe newfstatat_kp = {
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
 	.symbol_name = "vfs_statx",
-#else
-	.symbol_name = "vfs_fstatat",
-#endif
 	.pre_handler = newfstatat_handler_pre,
 };
 
