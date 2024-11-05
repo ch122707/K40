@@ -732,8 +732,7 @@ void __init ksu_core_init(void)
 
 void ksu_core_exit(void)
 {
-#ifndef MODULE
-	pr_info("ksu_kprobe_exit\n");
-	ksu_kprobe_exit();
+#ifdef CONFIG_KPROBES
+	pr_info("ksu_core_kprobe_exit\n");
 #endif
 }

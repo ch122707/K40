@@ -132,13 +132,12 @@ void update_uid()
 	ksu_queue_work(&ksu_update_uid_work);
 }
 
-int ksu_uid_observer_init()
+void ksu_uid_observer_init()
 {
 	INIT_WORK(&ksu_update_uid_work, do_update_uid);
-	return 0;
 }
 
-int ksu_uid_observer_exit()
+void ksu_uid_observer_exit()
 {
-	return 0;
+	// nothing to do
 }
