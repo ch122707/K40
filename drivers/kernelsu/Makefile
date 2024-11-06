@@ -2,7 +2,6 @@ obj-y += ksu.o
 obj-y += allowlist.o
 kernelsu-objs := apk_sign.o
 obj-y += kernelsu.o
-obj-y += module_api.o
 obj-y += sucompat.o
 obj-y += uid_observer.o
 obj-y += manager.o
