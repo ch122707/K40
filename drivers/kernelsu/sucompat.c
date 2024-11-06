@@ -1,12 +1,12 @@
-#include "asm/current.h"
-#include "linux/cred.h"
-#include "linux/err.h"
-#include "linux/fs.h"
-#include "linux/kprobes.h"
-#include "linux/types.h"
-#include "linux/uaccess.h"
-#include "linux/version.h"
-#include "linux/sched/task_stack.h"
+#include <asm/current.h>
+#include <linux/cred.h>
+#include <linux/err.h>
+#include <linux/fs.h>
+#include <linux/kprobes.h>
+#include <linux/types.h>
+#include <linux/uaccess.h>
+#include <linux/version.h>
+#include <linux/sched/task_stack.h>
 
 #include "allowlist.h"
 #include "arch.h"

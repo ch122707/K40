@@ -1,19 +1,19 @@
-#include "asm/current.h"
-#include "linux/compat.h"
-#include "linux/dcache.h"
-#include "linux/err.h"
-#include "linux/fs.h"
-#include "linux/input-event-codes.h"
-#include "linux/kprobes.h"
-#include "linux/printk.h"
-#include "linux/types.h"
-#include "linux/uaccess.h"
-#include "linux/version.h"
-#include "linux/workqueue.h"
+#include <asm/current.h>
+#include <linux/compat.h>
+#include <linux/dcache.h>
+#include <linux/err.h>
+#include <linux/fs.h>
+#include <linux/input-event-codes.h>
+#include <linux/kprobes.h>
+#include <linux/printk.h>
+#include <linux/types.h>
+#include <linux/uaccess.h>
+#include <linux/version.h>
+#include <linux/workqueue.h>
 
 #include "allowlist.h"
 #include "arch.h"
-#include "klog.h" // IWYU pragma: keep
+#include "klog.h"
 #include "ksud.h"
 #include "kernel_compat.h"
 #include "selinux/selinux.h"

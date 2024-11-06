@@ -1,14 +1,8 @@
-#include "linux/err.h"
-#include "linux/fs.h"
-#include "linux/gfp.h"
-#include "linux/kernel.h"
-#include "linux/moduleparam.h"
-
-#include "klog.h" // IWYU pragma: keep
-#include "kernel_compat.h"
-#include "crypto/hash.h"
-#include "linux/slab.h"
-#include "linux/version.h"
+#include <linux/err.h>
+#include <linux/fs.h>
+#include <linux/gfp.h>
+#include <linux/slab.h>
+#include <linux/version.h>
 
 struct zip_entry_header {
 	uint32_t signature;

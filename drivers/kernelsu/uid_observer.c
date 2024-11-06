@@ -1,14 +1,14 @@
-#include "linux/err.h"
-#include "linux/fs.h"
-#include "linux/list.h"
-#include "linux/slab.h"
-#include "linux/string.h"
-#include "linux/types.h"
-#include "linux/version.h"
-#include "linux/workqueue.h"
+#include <linux/err.h>
+#include <linux/fs.h>
+#include <linux/list.h>
+#include <linux/slab.h>
+#include <linux/string.h>
+#include <linux/types.h>
+#include <linux/version.h>
+#include <linux/workqueue.h>
 
 #include "allowlist.h"
-#include "klog.h" // IWYU pragma: keep
+#include "klog.h"
 #include "ksu.h"
 #include "manager.h"
 #include "uid_observer.h"
