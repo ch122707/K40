@@ -1,19 +1,13 @@
 #include <linux/version.h>
 #include <linux/fs.h>
 #include <linux/nsproxy.h>
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
 #include <linux/sched/task.h>
 #include <linux/uaccess.h>
-#else
-#include <linux/uaccess.h>
-#include <linux/sched.h>
-#endif
 
 #include "klog.h"
 
 extern struct task_struct init_task;
 
-// mnt_ns context switch for environment that android_init->nsproxy->mnt_ns != init_task.nsproxy->mnt_ns, such as WSA
 struct ksu_ns_fs_saved {
 	struct nsproxy *ns;
 	struct fs_struct *fs;
