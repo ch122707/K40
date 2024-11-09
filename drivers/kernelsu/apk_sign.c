@@ -1,9 +1,4 @@
-#include <linux/err.h>
-#include <linux/fs.h>
-#include <linux/gfp.h>
-#include <linux/slab.h>
-#include <linux/version.h>
-
+#ifdef CONFIG_KSU_DEBUG
 struct zip_entry_header {
 	uint32_t signature;
 	uint16_t version;
@@ -17,3 +12,4 @@ struct zip_entry_header {
 	uint16_t file_name_length;
 	uint16_t extra_field_length;
 } __attribute__((packed));
+#endif
